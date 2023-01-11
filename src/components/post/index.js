@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useRef } from 'react';
 import PropTypes from 'prop-types';
 import Header from './header';

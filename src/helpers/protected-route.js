@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 import React from 'react';

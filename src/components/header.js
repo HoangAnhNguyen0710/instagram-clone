@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react/prop-types */
 import { useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';

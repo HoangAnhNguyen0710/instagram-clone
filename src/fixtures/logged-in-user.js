@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 export default {
   userId: 'NvPY9M9MzFTARQ6M816YAzDJxZ72',
   username: 'karl',
