@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-nested-ternary */
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';

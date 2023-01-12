@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useParams, useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getUserByUsername } from '../services/firebase';

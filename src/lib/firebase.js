@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import Firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';

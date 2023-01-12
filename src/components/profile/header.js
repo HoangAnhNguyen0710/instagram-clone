@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';

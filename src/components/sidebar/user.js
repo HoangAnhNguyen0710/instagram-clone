@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';

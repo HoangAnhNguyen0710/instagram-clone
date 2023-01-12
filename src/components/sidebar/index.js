@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useContext } from 'react';
 import User from './user';
 import Suggestions from './suggestions';
