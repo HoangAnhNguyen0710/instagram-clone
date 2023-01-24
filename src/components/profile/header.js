@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable react/jsx-curly-brace-presence */
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
@@ -51,7 +52,8 @@ export default function Header({
           <img
             className="rounded-full h-16 w-16 md:h-20 lg:h-40 md:w-20 lg:w-40 flex"
             alt={`${user?.username} profile picture`}
-            src={`/images/avatars/${profileUsername}.jpg`}
+            // src={`/images/avatars/${profileUsername}.jpg`}
+            src={'/images/avatars/karl.jpg'}
           />
         ) : (
           <img
