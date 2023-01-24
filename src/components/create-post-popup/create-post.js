@@ -43,7 +43,7 @@ export default function CreatePostPopup(props) {
   const editorConfig = {
     placeholder: "Thêm chú thích...",
     colors: ["#ff0000", "#00ff00", "#0000ff"],
-    buttonsXS: ["bold", "italic", "Underline", "Table", "Font"],
+    buttonsXS: ["italic", "Underline", "Table", "Font"],
   };
   const editorRef = React.useRef(null);
 
