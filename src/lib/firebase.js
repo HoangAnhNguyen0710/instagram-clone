@@ -23,4 +23,4 @@ const { FieldValue } = Firebase.firestore;
 const FirebaseStorage = Firebase.storage();
 // seedDatabase(firebase);
 const analytic = Firebase.analytics();
-export { firebase, FieldValue, FirebaseStorage };
+export { firebase, FieldValue, FirebaseStorage, analytic };
