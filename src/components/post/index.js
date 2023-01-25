@@ -15,8 +15,8 @@ export default function Post({ content }) {
   // -> header, image, actions (like & comment icons), footer, comments
   return (
     <div className="rounded col-span-4 border bg-white border-gray-primary mb-12">
-      <Header username={content.username} />
-      <Image src={content.imageSrc} caption={content.caption} />
+      <Header username={content.username} userId={content.userId} />
+      <Image src={content.imageSrc} caption={content.caption} type={content.fileType} />
       <Actions
         docId={content.docId}
         totalLikes={content.likes.length}
@@ -43,6 +43,8 @@ Post.propTypes = {
     userLikedPhoto: PropTypes.bool.isRequired,
     likes: PropTypes.array.isRequired,
     comments: PropTypes.array.isRequired,
-    dateCreated: PropTypes.number.isRequired
+    dateCreated: PropTypes.number.isRequired,
+    fileType: PropTypes.string,
+    userId: PropTypes.string
   })
 };

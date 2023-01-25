@@ -40,6 +40,7 @@ export default function Suggestions({ userId, following, loggedInUserDocId }) {
             profileDocId={profile.docId}
             username={profile.username}
             profileId={profile.userId}
+            profileImage={profile.imageSrc}
             userId={userId}
             loggedInUserDocId={loggedInUserDocId}
           />
