@@ -69,6 +69,7 @@ export default function CreatePostPopup(props) {
           comments: [],
           likes: [],
           docId: v4(),
+          fileType: currentFile.file.type,
         };
       firebase
       .firestore()
@@ -242,8 +243,9 @@ export default function CreatePostPopup(props) {
                   <div className="flex items-center">
                     <img
                       className="rounded-full h-8 w-8 flex"
-                      // src={`/images/avatars/${user?.username}.jpg`}
-                      src="/images/avatars/karl.jpg"
+                      src={
+                        user.imageSrc ? user.imageSrc : "/images/avatars/default.png"
+                      }
                       alt={`${user?.username} profile`}
                     />
                     <span className="px-3 font-medium">{user?.username}</span>

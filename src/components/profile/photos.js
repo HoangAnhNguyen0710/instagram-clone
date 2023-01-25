@@ -1,7 +1,9 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable quotes */
 /* eslint-disable no-nested-ternary */
-import PropTypes from 'prop-types';
-import Skeleton from 'react-loading-skeleton';
+/* eslint-disable jsx-a11y/media-has-caption */
+import PropTypes from "prop-types";
+import Skeleton from "react-loading-skeleton";
 
 export default function Photos({ photos }) {
   return (
@@ -14,7 +16,14 @@ export default function Photos({ photos }) {
         ) : photos.length > 0 ? (
           photos.map((photo) => (
             <div key={photo.docId} className="relative group">
-              <img src={photo.imageSrc} alt={photo.caption} />
+              {photo.fileType === 'video/mp4' ? (
+                <video autoPlay="true" muted="false">
+                  <source src={photo.imageSrc} type="video/mp4" />
+                  <track label="" />
+                </video>
+              ) : (
+                <img src={photo.imageSrc} alt={photo.caption} />
+              )}
 
               <div className="absolute bottom-0 left-0 bg-gray-200 z-10 w-full justify-evenly items-center h-full bg-black-faded group-hover:flex hidden">
                 <p className="flex items-center text-white font-bold">
@@ -54,11 +63,14 @@ export default function Photos({ photos }) {
         ) : null}
       </div>
 
-      {!photos || (photos.length === 0 && <p className="text-center text-2xl">No Posts Yet</p>)}
+      {!photos ||
+        (photos.length === 0 && (
+          <p className="text-center text-2xl">No Posts Yet</p>
+        ))}
     </div>
   );
 }
 
 Photos.propTypes = {
-  photos: PropTypes.oneOfType([PropTypes.array, PropTypes.bool])
+  photos: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
 };

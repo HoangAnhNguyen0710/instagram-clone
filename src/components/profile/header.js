@@ -1,12 +1,15 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable quotes */
 /* eslint-disable react/jsx-curly-brace-presence */
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import { useState, useEffect, useContext } from 'react';
-import PropTypes from 'prop-types';
-import Skeleton from 'react-loading-skeleton';
-import useUser from '../../hooks/use-user';
-import { isUserFollowingProfile, toggleFollow } from '../../services/firebase';
-import UserContext from '../../context/user';
+import { useState, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
+import Skeleton from "react-loading-skeleton";
+import { Button } from "@mui/material";
+import useUser from "../../hooks/use-user";
+import { isUserFollowingProfile, toggleFollow, updateLoggedInUserAvatar } from "../../services/firebase";
+import UserContext from "../../context/user";
+import { FirebaseStorage } from "../../lib/firebase";
 
 export default function Header({
   photosCount,
@@ -18,25 +21,64 @@ export default function Header({
     fullName,
     followers,
     following,
-    username: profileUsername
-  }
+    username: profileUsername,
+  },
+  userInfor
 }) {
   const { user: loggedInUser } = useContext(UserContext);
   const { user } = useUser(loggedInUser?.uid);
   const [isFollowingProfile, setIsFollowingProfile] = useState(false);
   const activeBtnFollow = user?.username && user?.username !== profileUsername;
-
+  const [confirmChange, setConfirmChange] = useState(false);
+  const [changeAva, setChangeAva] = useState(null);
   const handleToggleFollow = async () => {
     setIsFollowingProfile((isFollowingProfile) => !isFollowingProfile);
     setFollowerCount({
-      followerCount: isFollowingProfile ? followerCount - 1 : followerCount + 1
+      followerCount: isFollowingProfile ? followerCount - 1 : followerCount + 1,
     });
-    await toggleFollow(isFollowingProfile, user.docId, profileDocId, profileUserId, user.userId);
+    await toggleFollow(
+      isFollowingProfile,
+      user.docId,
+      profileDocId,
+      profileUserId,
+      user.userId
+    );
   };
-
+  const handleChangeAvatar = (e) => {
+    setChangeAva(e.target.files[0]);
+    setConfirmChange(true);
+  }
+  const cancelChangeAva = () => {
+    setChangeAva(null);
+    setConfirmChange(false);
+  }
+  const saveChangeAva = (e) => {
+    e.preventDefault();
+    const upload =FirebaseStorage.ref(`/users/${user.userId}/avatars/${changeAva.name}`).put(changeAva);
+    upload.on(
+    "state_changed",
+    snapshot => {},
+    error => {console.log(error)},
+    () => {
+      FirebaseStorage
+      .ref(`/users/${user.userId}/avatars`)
+      .child(changeAva.name)
+      .getDownloadURL()
+      .then((url) => {
+        console.log(url)
+        updateLoggedInUserAvatar(user.docId, url);
+        setChangeAva(null);
+        setConfirmChange(false);
+        })
+    }
+   )
+  }
   useEffect(() => {
     const isLoggedInUserFollowingProfile = async () => {
-      const isFollowing = await isUserFollowingProfile(user.username, profileUserId);
+      const isFollowing = await isUserFollowingProfile(
+        user.username,
+        profileUserId
+      );
       setIsFollowingProfile(!!isFollowing);
     };
 
@@ -48,18 +90,65 @@ export default function Header({
   return (
     <div className="grid grid-cols-3 gap-4 justify-between mx-auto max-w-screen-lg">
       <div className="container flex justify-center items-center">
-        {profileUsername ? (
-          <img
+        {profileUsername? (
+          <div className="relative flex items-center justify-center h-fit">
+            {changeAva !== null ? <img
+              className="rounded-full h-16 w-16 md:h-20 lg:h-40 md:w-20 lg:w-40 flex"
+              alt={`${user?.username} profile picture`}
+              // src={`/images/avatars/${profileUsername}.jpg`}
+              src={
+                URL.createObjectURL(changeAva)
+              }
+            />
+            :
+            <img
             className="rounded-full h-16 w-16 md:h-20 lg:h-40 md:w-20 lg:w-40 flex"
             alt={`${user?.username} profile picture`}
             // src={`/images/avatars/${profileUsername}.jpg`}
-            src={'/images/avatars/karl.jpg'}
+            src={
+              userInfor.imageSrc ? userInfor.imageSrc : "/images/avatars/default.png"
+            }
           />
+          }
+            {!user.imageSrc && confirmChange === false && profileUserId === user.userId &&(
+              <div className="absolute">
+                <Button
+                  variant="contained"
+                  component="label"
+                  className="absolute rounded-lg"
+                  size="small"
+                >
+                  Upload Avatar
+                  <input hidden accept="image/*" type="file" onChange={handleChangeAvatar}/>
+                </Button>
+              </div>
+            )}
+            {!user.imageSrc && confirmChange === true && profileUserId === user.userId &&(
+              <div className="absolute flex items-center">
+                   <Button
+                  variant="outlined"
+                  component="label"
+                  size="small"
+                  onClick={saveChangeAva}
+                >
+                  Ok
+                </Button>
+                <Button
+                  variant="outlined"
+                  component="label"
+                  size="small"
+                  onClick={cancelChangeAva}
+                >
+                  Cancel
+                </Button>
+              </div>
+            )}
+          </div>
         ) : (
           <img
             className="rounded-full h-16 w-16 md:h-20 lg:h-40 md:w-20 lg:w-40 flex"
-            alt={`Karl Hadwen's profile picture`}
-            src="/images/avatars/karl.jpg"
+            alt={`user's profile default picture`}
+            src="/images/avatars/default.png"
           />
         )}
       </div>
@@ -72,12 +161,12 @@ export default function Header({
               type="button"
               onClick={handleToggleFollow}
               onKeyDown={(event) => {
-                if (event.key === 'Enter') {
+                if (event.key === "Enter") {
                   handleToggleFollow();
                 }
               }}
             >
-              {isFollowingProfile ? 'Unfollow' : 'Follow'}
+              {isFollowingProfile ? "Unfollow" : "Follow"}
             </button>
           )}
         </div>
@@ -101,7 +190,9 @@ export default function Header({
           )}
         </div>
         <div className="container mt-4">
-          <p className="font-medium">{!fullName ? <Skeleton count={1} height={24} /> : fullName}</p>
+          <p className="font-medium">
+            {!fullName ? <Skeleton count={1} height={24} /> : fullName}
+          </p>
         </div>
       </div>
     </div>
@@ -118,6 +209,7 @@ Header.propTypes = {
     fullName: PropTypes.string,
     username: PropTypes.string,
     followers: PropTypes.array,
-    following: PropTypes.array
-  }).isRequired
+    following: PropTypes.array,
+  }).isRequired,
+  userInfor: PropTypes.object
 };

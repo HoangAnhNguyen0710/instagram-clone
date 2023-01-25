@@ -1,17 +1,21 @@
 /* eslint-disable prettier/prettier */
-import { useState } from 'react';
+/* eslint-disable quotes */
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { updateLoggedInUserFollowing, updateFollowedUserFollowers } from '../../services/firebase';
+import { updateLoggedInUserFollowing, updateFollowedUserFollowers, getUserByUserId } from '../../services/firebase';
 
 export default function SuggestedProfile({
   profileDocId,
   username,
   profileId,
   userId,
-  loggedInUserDocId
+  loggedInUserDocId,
+  profileImage
 }) {
   const [followed, setFollowed] = useState(false);
+
+  
 
   async function handleFollowUser() {
     setFollowed(true);
@@ -24,8 +28,8 @@ export default function SuggestedProfile({
       <div className="flex items-center justify-between">
         <img
           className="rounded-full w-8 flex mr-3"
-          // src={`/images/avatars/${username}.jpg`}
-          src='/images/avatars/karl.jpg'
+          src=
+            {profileImage !== undefined ? profileImage : "/images/avatars/default.png"}
           alt=""
         />
         <Link to={`/p/${username}`}>
@@ -48,5 +52,6 @@ SuggestedProfile.propTypes = {
   username: PropTypes.string.isRequired,
   profileId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
-  loggedInUserDocId: PropTypes.string.isRequired
+  loggedInUserDocId: PropTypes.string.isRequired,
+  profileImage: PropTypes.string
 };

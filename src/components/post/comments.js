@@ -10,8 +10,7 @@ import AddComment from './add-comment';
 
 export default function Comments({ docId, comments: allComments, posted, commentInput }) {
   const [comments, setComments] = useState(allComments);
-  const [commentNum, setCommentNum] = useState(0);
-
+  const [commentNum, setCommentNum] = useState(comments.length  );
   useEffect(()=> {if(comments.length > 3) setCommentNum(3)}, [comments])
   return (
     <>

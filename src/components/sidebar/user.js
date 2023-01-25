@@ -1,9 +1,12 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable quotes */
+/* eslint-disable no-unneeded-ternary */
+
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 
-export default function User({ username, fullName }) {
+export default function User({ username, fullName, imageSrc }) {
   return !username || !fullName ? (
     <Skeleton count={1} height={61} />
   ) : (
@@ -12,7 +15,9 @@ export default function User({ username, fullName }) {
         <img
           className="rounded-full w-16 flex mr-3"
           // src={`/images/avatars/${username}.jpg`}
-          src='/images/avatars/karl.jpg'
+          src={
+            imageSrc ? imageSrc : "/images/avatars/default.png"
+          }
           alt=""
         />
       </div>
@@ -26,5 +31,6 @@ export default function User({ username, fullName }) {
 
 User.propTypes = {
   username: PropTypes.string,
-  fullName: PropTypes.string
+  fullName: PropTypes.string,
+  imageSrc: PropTypes.string
 };
