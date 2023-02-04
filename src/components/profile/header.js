@@ -1,13 +1,21 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable quotes */
 /* eslint-disable react/jsx-curly-brace-presence */
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import Skeleton from "react-loading-skeleton";
-import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
+import { Button, Popover} from "@mui/material";
 import useUser from "../../hooks/use-user";
-import { isUserFollowingProfile, toggleFollow, updateLoggedInUserAvatar } from "../../services/firebase";
+import {
+  getUsersByUserId,
+  isUserFollowingProfile,
+  toggleFollow,
+  updateLoggedInUserAvatar,
+} from "../../services/firebase";
 import UserContext from "../../context/user";
 import { FirebaseStorage } from "../../lib/firebase";
 
@@ -23,7 +31,7 @@ export default function Header({
     following,
     username: profileUsername,
   },
-  userInfor
+  userInfor,
 }) {
   const { user: loggedInUser } = useContext(UserContext);
   const { user } = useUser(loggedInUser?.uid);
@@ -31,6 +39,27 @@ export default function Header({
   const activeBtnFollow = user?.username && user?.username !== profileUsername;
   const [confirmChange, setConfirmChange] = useState(false);
   const [changeAva, setChangeAva] = useState(null);
+  const [popoverAnchorEl, setAnchorEl] = useState(null);
+  const [followInfor, setFollowInfor] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  useEffect(() => {
+    async function getFollowing() {
+      const follow = await getUsersByUserId(following);
+      console.log(follow);
+      setFollowInfor(follow);
+    }
+    getFollowing();
+  }, [following]);
+  const openPopover = Boolean(popoverAnchorEl);
+  const popoverId = openPopover ? "simple-popover" : undefined;
   const handleToggleFollow = async () => {
     setIsFollowingProfile((isFollowingProfile) => !isFollowingProfile);
     setFollowerCount({
@@ -47,32 +76,35 @@ export default function Header({
   const handleChangeAvatar = (e) => {
     setChangeAva(e.target.files[0]);
     setConfirmChange(true);
-  }
+  };
   const cancelChangeAva = () => {
     setChangeAva(null);
     setConfirmChange(false);
-  }
+  };
   const saveChangeAva = (e) => {
     e.preventDefault();
-    const upload =FirebaseStorage.ref(`/users/${user.userId}/avatars/${changeAva.name}`).put(changeAva);
+    const upload = FirebaseStorage.ref(
+      `/users/${user.userId}/avatars/${changeAva.name}`
+    ).put(changeAva);
     upload.on(
-    "state_changed",
-    snapshot => {},
-    error => {console.log(error)},
-    () => {
-      FirebaseStorage
-      .ref(`/users/${user.userId}/avatars`)
-      .child(changeAva.name)
-      .getDownloadURL()
-      .then((url) => {
-        console.log(url)
-        updateLoggedInUserAvatar(user.docId, url);
-        setChangeAva(null);
-        setConfirmChange(false);
-        })
-    }
-   )
-  }
+      "state_changed",
+      (snapshot) => {},
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        FirebaseStorage.ref(`/users/${user.userId}/avatars`)
+          .child(changeAva.name)
+          .getDownloadURL()
+          .then((url) => {
+            console.log(url);
+            updateLoggedInUserAvatar(user.docId, url);
+            setChangeAva(null);
+            setConfirmChange(false);
+          });
+      }
+    );
+  };
   useEffect(() => {
     const isLoggedInUserFollowingProfile = async () => {
       const isFollowing = await isUserFollowingProfile(
@@ -90,59 +122,73 @@ export default function Header({
   return (
     <div className="grid grid-cols-3 gap-4 justify-between mx-auto max-w-screen-lg">
       <div className="container flex justify-center items-center">
-        {profileUsername? (
+        {profileUsername ? (
           <div className="relative flex items-center justify-center h-fit">
-            {changeAva !== null ? <img
-              className="rounded-full h-16 w-16 md:h-20 lg:h-40 md:w-20 lg:w-40 flex"
-              alt={`${user?.username} profile picture`}
-              // src={`/images/avatars/${profileUsername}.jpg`}
-              src={
-                URL.createObjectURL(changeAva)
-              }
-            />
-            :
-            <img
-            className="rounded-full h-16 w-16 md:h-20 lg:h-40 md:w-20 lg:w-40 flex"
-            alt={`${user?.username} profile picture`}
-            // src={`/images/avatars/${profileUsername}.jpg`}
-            src={
-              userInfor.imageSrc ? userInfor.imageSrc : "/images/avatars/default.png"
-            }
-          />
-          }
-            {!user.imageSrc && confirmChange === false && profileUserId === user.userId &&(
-              <div className="absolute">
-                <Button
-                  variant="contained"
-                  component="label"
-                  className="absolute rounded-lg"
-                  size="small"
-                >
-                  Upload Avatar
-                  <input hidden accept="image/*" type="file" onChange={handleChangeAvatar}/>
-                </Button>
-              </div>
+            {changeAva !== null ? (
+              <img
+                className="rounded-full h-16 w-16 md:h-20 lg:h-40 md:w-20 lg:w-40 flex"
+                alt={`${user?.username} profile picture`}
+                // src={`/images/avatars/${profileUsername}.jpg`}
+                src={URL.createObjectURL(changeAva)}
+              />
+            ) : (
+              <img
+                className="rounded-full h-16 w-16 md:h-20 lg:h-40 md:w-20 lg:w-40 flex"
+                alt={`${user?.username} profile picture`}
+                // src={`/images/avatars/${profileUsername}.jpg`}
+                src={
+                  userInfor.imageSrc
+                    ? userInfor.imageSrc
+                    : "/images/avatars/default.png"
+                }
+              />
             )}
-            {!user.imageSrc && confirmChange === true && profileUserId === user.userId &&(
-              <div className="absolute flex items-center">
-                   <Button
-                  variant="outlined"
-                  component="label"
-                  size="small"
-                  onClick={saveChangeAva}
-                >
-                  Ok
-                </Button>
-                <Button
-                  variant="outlined"
-                  component="label"
-                  size="small"
-                  onClick={cancelChangeAva}
-                >
-                  Cancel
-                </Button>
-              </div>
-            )}
+            {
+            // !user.imageSrc &&
+              confirmChange === false &&
+              profileUserId === user.userId && (
+                <div className="absolute">
+                  <Button
+                    variant="contained"
+                    component="label"
+                    className="absolute rounded-lg"
+                    size="small"
+                  >
+                    Upload Avatar
+                    <input
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      onChange={handleChangeAvatar}
+                    />
+                  </Button>
+                </div>
+              )}
+            {
+            // !user.imageSrc &&
+              confirmChange === true &&
+              profileUserId === user.userId && (
+                <div className="absolute flex items-center">
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    size="small"
+                    color="error"
+                    onClick={saveChangeAva}
+                  >
+                    Ok
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    size="small"
+                    color="error"
+                    onClick={cancelChangeAva}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              )}
           </div>
         ) : (
           <img
@@ -184,7 +230,47 @@ export default function Header({
                 {followerCount === 1 ? `follower` : `followers`}
               </p>
               <p className="mr-10">
-                <span className="font-bold">{following.length}</span> following
+                <span
+                  className="font-bold cursor-pointer"
+                  onClick={handleClick}
+                >
+                  {followInfor != null ? followInfor.length : 0} following
+                </span>
+                <Popover
+                  id={popoverId}
+                  open={openPopover}
+                  anchorEl={popoverAnchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                >
+                  <div className="h-fit flex flex-col h-60 overflow-y-scroll">
+                    {Array.isArray(followInfor) &&
+                      followInfor.length > 0 &&
+                      followInfor.map((follow) => (
+                        <Link
+                          key={follow.docId}
+                          to={`/p/${follow.username}`}
+                          className="cursor-pointer flex items-center justify-content-center p-3"
+                          onClick={handleClose}
+                        >
+                          <img
+                            className="rounded-full flex w-4 h-4 md:w-6 md:h-6 lg:w-8 lg:h-8"
+                            alt={`${follow.username} profile picture`}
+                            // src={`/images/avatars/${profileUsername}.jpg`}
+                            src={
+                              follow.imageSrc
+                                ? follow.imageSrc
+                                : "/images/avatars/default.png"
+                            }
+                          />
+                          <span className="px-2">{follow.username}</span>
+                        </Link>
+                      ))}
+                  </div>
+                </Popover>
               </p>
             </>
           )}
@@ -211,5 +297,5 @@ Header.propTypes = {
     followers: PropTypes.array,
     following: PropTypes.array,
   }).isRequired,
-  userInfor: PropTypes.object
+  userInfor: PropTypes.object,
 };

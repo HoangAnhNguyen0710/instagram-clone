@@ -40,7 +40,23 @@ export async function getUserByUserId(userId) {
 
   return resultArr;
 }
+export async function getUsersByUserId(userIdList) {
+  console.log(userIdList);
+  if(Array.isArray(userIdList) &&userIdList.length > 0){
+    const result = await firebase
+    .firestore()
+    .collection("users")
+    .where("userId", "in", userIdList)
+    .get();
+    const resultArr = result.docs.map((item) => ({
+    ...item.data(),
+    docId: item.id,
+    }));
+    return resultArr;
+  }
 
+  return null;
+}
 export async function getSuggestedProfiles(userId, following) {
   const result = await firebase.firestore().collection("users").limit(10).get();
 
