@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable react/self-closing-comp */
 import { useRef } from 'react';
 import PropTypes from 'prop-types';
 import Header from './header';
@@ -16,6 +17,7 @@ export default function Post({ content }) {
   return (
     <div className="rounded col-span-4 border bg-white border-gray-primary mb-12">
       <Header username={content.username} userId={content.userId} />
+      <div className='border-b border-gray-primary'></div>
       <Image src={content.imageSrc} caption={content.caption} type={content.fileType} />
       <Actions
         docId={content.docId}

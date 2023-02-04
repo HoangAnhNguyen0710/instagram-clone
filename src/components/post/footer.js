@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 export default function Footer({ caption, username }) {
   return (
-    <div className="p-4 pt-2 pb-0 flex">
+    <div className="px-4 py-2 flex">
       <span className="mr-1 font-bold">{username}</span>
       <span dangerouslySetInnerHTML={{__html: caption}}></span>
     </div>
@@ -14,5 +14,5 @@ export default function Footer({ caption, username }) {
 
 Footer.propTypes = {
   caption: PropTypes.string.isRequired,
-  username: PropTypes.string.isRequired
+  username: PropTypes.string
 };
