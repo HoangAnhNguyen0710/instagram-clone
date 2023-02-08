@@ -51,7 +51,7 @@ const useStyles = makeStyles({
 
 export default function ChatBox({ following, user }) {
   const classes = useStyles();
-  const [followInfor, setFollowInfor] = useState(null);
+  const [followInfor, setFollowInfor] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([]);
@@ -69,7 +69,9 @@ export default function ChatBox({ following, user }) {
       setFollowInfor(follow);
 
     }
-    getFollowing();
+    if(following !== []) {
+      getFollowing();
+    }
   }, [following]);
 
   useEffect(() => {
@@ -98,9 +100,9 @@ export default function ChatBox({ following, user }) {
           setRecvMessage(doc.docs.map((document) => document.data()))
         );
     }
-    //   if(inputValue === "" && user) {
-    getMessageList();
-    //   }
+      if(selectedUser != null) {
+         getMessageList();
+      }
   }, [selectedUser]);
 
   const HandleSearchUser = (e) => {
@@ -177,7 +179,7 @@ export default function ChatBox({ following, user }) {
           <Divider />
           <List>
           {findUser != null && findUser.map((infor) => (
-            !followInfor.includes(infor) &&
+          followInfor ? !followInfor.includes(infor) &&
                   <ListItem
                     key={infor.docId}
                     selected={selectedUser === infor.userId}
@@ -195,7 +197,26 @@ export default function ChatBox({ following, user }) {
                     </ListItemIcon>
                     <ListItemText primary={infor.username}></ListItemText>
                   </ListItem>
-                ))}
+                :
+                 <ListItem
+                   key={infor.docId}
+                   selected={selectedUser === infor.userId}
+                   onClick={() => changeReceive(infor.userId)}
+                 >
+                   <ListItemIcon>
+                     <Avatar
+                       alt={infor.username}
+                       src={
+                         infor.imageSrc
+                           ? infor.imageSrc
+                           : "/images/avatars/default.png"
+                       }
+                     />
+                   </ListItemIcon>
+                   <ListItemText primary={infor.username}></ListItemText>
+                 </ListItem>
+                )
+                )}
           <Divider />
             {followInfor && (
               <>
