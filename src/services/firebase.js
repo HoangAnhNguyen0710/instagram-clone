@@ -1,4 +1,7 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-return-assign */
+/* eslint-disable prefer-const */
 /* eslint-disable object-shorthand */
 /* eslint-disable quotes */
 import { firebase, FieldValue } from "../lib/firebase";
@@ -41,7 +44,6 @@ export async function getUserByUserId(userId) {
   return resultArr;
 }
 export async function getUsersByUserId(userIdList) {
-  console.log(userIdList);
   if(Array.isArray(userIdList) &&userIdList.length > 0){
     const result = await firebase
     .firestore()
@@ -58,14 +60,31 @@ export async function getUsersByUserId(userIdList) {
   return null;
 }
 export async function getSuggestedProfiles(userId, following) {
-  const result = await firebase.firestore().collection("users").limit(10).get();
+  console.log(following);
+  if(following.length < 5) {
+    const result = await firebase.firestore().collection("users").limit(20).get();
+    const resultList =  result.docs.map((user) => ({ ...user.data(), docId: user.id }));
+    let randomList = []
+    while(randomList.length < 10) {
+      let i = Math.floor(Math.random() * 19);
+      if(!randomList.includes(resultList[i]) && !following.includes(resultList[i])) {
+        randomList.push(resultList[i]);
+      }
+    }
+    return randomList;
+  }
+  if(following.length > 5) {
+    let sameFollowId = [];
 
-  return result.docs
-    .map((user) => ({ ...user.data(), docId: user.id }))
-    .filter(
-      (profile) =>
-        profile.userId !== userId && !following.includes(profile.userId)
-    );
+      let followList = await getUsersByUserId(following);
+      followList.map((fl) => 
+      sameFollowId = sameFollowId.concat(fl.following.filter((Id) =>Id !== userId && !sameFollowId.includes(Id)  && !following.includes(Id))
+      ))
+     
+    const UserSuggestList = await getUsersByUserId(sameFollowId);
+    return UserSuggestList;
+
+  }
 }
 
 export async function updateLoggedInUserFollowing(

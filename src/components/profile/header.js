@@ -97,7 +97,8 @@ export default function Header({
           .child(changeAva.name)
           .getDownloadURL()
           .then((url) => {
-            console.log(url);
+            // console.log(url);
+            alert("Thay đổi ảnh đại diện thành công!");
             updateLoggedInUserAvatar(user.docId, url);
             setChangeAva(null);
             setConfirmChange(false);
