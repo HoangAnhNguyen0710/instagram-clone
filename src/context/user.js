@@ -1,8 +1,5 @@
 /* eslint-disable prettier/prettier */
 import { createContext } from 'react';
 
-const UserContext = createContext({
-    user: null,
-    setUser: (user) => {}
-});
+const UserContext = createContext(null);
 export default UserContext;

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { lazy, Suspense, useState, useEffect } from 'react';
+import { lazy, Suspense,  useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
 import UserContext from './context/user';
@@ -15,13 +15,12 @@ const Profile = lazy(() => import('./pages/profile'));
 const NotFound = lazy(() => import('./pages/not-found'));
 
 export default function App() {
-  const userInfor = useAuthListener()
-  const [user, setUser] = useState(userInfor);
+  const { user } = useAuthListener();
   useEffect(() => {
     console.log(user);
   }, [user]);
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user }}>
       <Router>
         <Suspense fallback={<p>Loading...</p>}>
           <Switch>
