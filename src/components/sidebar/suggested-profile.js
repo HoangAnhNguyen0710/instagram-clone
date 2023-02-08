@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable quotes */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { updateLoggedInUserFollowing, updateFollowedUserFollowers, getUserByUserId } from '../../services/firebase';
@@ -14,9 +14,7 @@ export default function SuggestedProfile({
   profileImage
 }) {
   const [followed, setFollowed] = useState(false);
-
   
-
   async function handleFollowUser() {
     setFollowed(true);
     await updateLoggedInUserFollowing(loggedInUserDocId, profileId, false);

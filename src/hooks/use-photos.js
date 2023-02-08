@@ -19,7 +19,7 @@ export default function usePhotos(user) {
     }
 
     getTimelinePhotos();
-  }, [user?.userId]);
+  }, [user?.userId, user]);
 
   return { photos };
 }

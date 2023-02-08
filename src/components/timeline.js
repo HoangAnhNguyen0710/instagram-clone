@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/prop-types */
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import usePhotos from '../hooks/use-photos';
 import Post from './post';
@@ -9,7 +9,7 @@ import LoggedInUserContext from '../context/logged-in-user';
 export default function Timeline() {
   const { user } = useContext(LoggedInUserContext);
   const { photos } = usePhotos(user);
-
+  
   return (
     <div className="col-span-3 lg:col-span-2">
       {!photos ? (

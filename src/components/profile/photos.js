@@ -12,6 +12,7 @@ import GridOnIcon from "@mui/icons-material/GridOn";
 import { useState } from "react";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import PostDetail from "./post-detail";
+import Post from "../post";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -35,12 +36,12 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 const postStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
@@ -64,7 +65,7 @@ export default function Photos({ photos }) {
   const handleOpenModal = (photo) => {
     setCurrentPhoto(photo);
     setOpenModal(true);
-  }
+  };
   return (
     <div className="h-16 border-t border-gray-primary mt-12 px-4 lg:px-0 flex flex-col items-center">
       <Box
@@ -92,7 +93,7 @@ export default function Photos({ photos }) {
                 className="flex justify-center items-center"
                 {...a11yProps(1)}
               >
-                <BookmarkBorderIcon /> <span className="px-2">Đã lưu</span>
+                <BookmarkBorderIcon /> <span className="px-2">Danh sách</span>
               </span>
             }
           />
@@ -117,7 +118,10 @@ export default function Photos({ photos }) {
                     <img src={photo.imageSrc} alt={photo.caption} />
                   )}
 
-                  <div className="absolute bottom-0 left-0 bg-gray-200 z-10 w-full justify-evenly items-center h-full bg-black-faded group-hover:flex hidden" onClick={()=>handleOpenModal(photo)}>
+                  <div
+                    className="absolute bottom-0 left-0 bg-gray-200 z-10 w-full justify-evenly items-center h-full bg-black-faded group-hover:flex hidden"
+                    onClick={() => handleOpenModal(photo)}
+                  >
                     <p className="flex items-center text-white font-bold">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -160,16 +164,33 @@ export default function Photos({ photos }) {
             <p className="text-center text-2xl">No Posts Yet</p>
           ))}
       </TabPanel>
+      <TabPanel value={tabValue} index={1}>
+        <div className="col-span-2 lg:col-span-1 mt-6 mb-12">
+          {!photos ? (
+            <Skeleton count={4} width={640} height={500} className="mb-5" />
+          ) : (
+            photos.map((content) => (
+              <Post key={content.docId} content={content} />
+            ))
+          )}
+        </div>
+        {!photos ||
+          (photos.length === 0 && (
+            <p className="text-center text-2xl">No Posts Yet</p>
+          ))}
+      </TabPanel>
       <Modal
-          open={openModal}
-          onClose={handleCloseModal}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div
+          style={postStyle}
+          className="bg-white h-4/5 w-4/5 overflow-y-scroll"
         >
-          <div style={postStyle} className="bg-white h-4/5 w-4/5 overflow-y-scroll">
-            <PostDetail content={currentPhoto}/>
-          </div>
-       
+          <PostDetail content={currentPhoto} />
+        </div>
       </Modal>
     </div>
   );
