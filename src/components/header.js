@@ -9,6 +9,7 @@ import FirebaseContext from "../context/firebase";
 import UserContext from "../context/user";
 import * as ROUTES from "../constants/routes";
 import useUser from "../hooks/use-user";
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import CreatePostPopup from "./create-post-popup/create-post";
 import { Tooltip } from "@mui/material";
 
@@ -42,6 +43,9 @@ export default function Header() {
             <div className="text-gray-700 text-center flex items-center align-items">
               {user ? (
                 <>
+                  <Link to={ROUTES.MESSAGES} aria-label="Messages" className="mx-4">
+                    <ChatBubbleOutlineIcon fontSize="large"/>
+                  </Link>
                   <Tooltip title="Post an article">
                     <button
                       type="button"

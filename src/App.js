@@ -6,6 +6,7 @@ import UserContext from './context/user';
 import useAuthListener from './hooks/use-auth-listener';
 
 import ProtectedRoute from './helpers/protected-route';
+import ChatBoxScreen from './pages/chatbox';
 
 const Login = lazy(() => import('./pages/login'));
 const SignUp = lazy(() => import('./pages/sign-up'));
@@ -29,6 +30,9 @@ export default function App() {
             <Route path={ROUTES.PROFILE} component={Profile} />
             <ProtectedRoute user={user} path={ROUTES.DASHBOARD} exact>
               <Dashboard />
+            </ProtectedRoute>
+            <ProtectedRoute user={user} path={ROUTES.MESSAGES} exact>
+              <ChatBoxScreen/>
             </ProtectedRoute>
             <Route component={NotFound} />
           </Switch>

@@ -176,7 +176,6 @@ export async function getUserPhotosByUsername(username) {
   }));
 }
 
-
 export async function isUserFollowingProfile(
   loggedInUserUsername,
   profileUserId
