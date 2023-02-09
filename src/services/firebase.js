@@ -73,7 +73,7 @@ export async function getSuggestedProfiles(userId, following) {
     }
     return randomList;
   }
-  if(following.length > 5) {
+  if(following.length >= 5) {
     let sameFollowId = [];
 
       let followList = await getUsersByUserId(following);
