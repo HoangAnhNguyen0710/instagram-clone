@@ -12,18 +12,22 @@ import useUser from "../hooks/use-user";
 import SearchIcon from '@mui/icons-material/Search';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import CreatePostPopup from "./create-post-popup/create-post";
-import { Button, Tooltip } from "@mui/material";
+import { Button, SwipeableDrawer, Tooltip } from "@mui/material";
+import Search from "./search";
+
+const drawerBleeding = 56;
+
+
 
 export default function Header() {
   const { user: loggedInUser } = useContext(UserContext);
   const { user } = useUser(loggedInUser?.uid);
   const { firebase } = useContext(FirebaseContext);
   const history = useHistory();
-
   const [open, setOpen] = React.useState(false);
   const handleOpenModal = () => setOpen(true);
   const handleCloseModal = () => setOpen(false);
-
+  const [searchDrawer, toggleDrawer] = React.useState(false);
   return (
     <>
       <CreatePostPopup open={open} handleCloseModal={handleCloseModal} user={user}/>
@@ -63,7 +67,7 @@ export default function Header() {
                 </Link>
                 </div>
                 <div className="my-2 flex items-center rounded-md hover:bg-gray-background text-black-light">
-                <Button type="button" color="inherit"><SearchIcon fontSize="large"/> <span className="md:px-2 hidden md:block text-black-light">Search</span></Button>
+                <Button type="button" color="inherit" onClick={()=>toggleDrawer(true)}><SearchIcon fontSize="large"/> <span className="md:px-2 hidden md:block text-black-light">Search</span></Button>
                 </div>
                 <div className="my-1">
                   <Link to={ROUTES.MESSAGES} aria-label="Messages" className="m-2 flex items-center rounded-md hover:bg-gray-background">
@@ -157,6 +161,19 @@ export default function Header() {
           </div>
         </div>
       </div>
+      <SwipeableDrawer
+      anchor="top"
+      open={searchDrawer}
+      onClose={()=>toggleDrawer(false)}
+      onOpen={()=>toggleDrawer(true)}
+      swipeAreaWidth={drawerBleeding}
+      disableSwipeToOpen={false}
+      ModalProps={{
+        keepMounted: true,
+      }}
+    >
+      <Search/>
+    </SwipeableDrawer>
     </>
   );
 }

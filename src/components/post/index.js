@@ -10,7 +10,6 @@ import Comments from './comments';
 
 export default function Post({ content }) {
   const commentInput = useRef(null);
-  console.log(content);
   const handleFocus = () => commentInput.current.focus(); // anon func so it doesn't get called right away
 
   // components
