@@ -36,6 +36,7 @@ const useStyles = makeStyles({
   chatSection: {
     width: "100%",
     height: "80vh",
+    overflowX: "scroll",
   },
   headBG: {
     backgroundColor: "#e0e0e0",
@@ -177,7 +178,7 @@ export default function ChatBox({ following, user }) {
             </form>
           </Grid>
           <Divider />
-          <List>
+          <List className="overflow-x-scroll">
           {findUser != null && findUser.map((infor) => (
           followInfor ? !followInfor.includes(infor) &&
                   <ListItem
@@ -243,7 +244,7 @@ export default function ChatBox({ following, user }) {
             )}
           </List>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={9} className="">
           <List className={classes.messageArea}>
             {totalList.map((message) => (
               message.sender_Id === user.userId ?
