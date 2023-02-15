@@ -73,7 +73,6 @@ export async function getUsersByUserId(userIdList) {
   return null;
 }
 export async function getSuggestedProfiles(userId, following) {
-  console.log(following);
   if(following.length < 5) {
     const result = await firebase.firestore().collection("users").limit(20).get();
     const resultList =  result.docs.map((user) => ({ ...user.data(), docId: user.id }));
@@ -101,8 +100,8 @@ export async function getSuggestedProfiles(userId, following) {
 }
 
 export async function updateLoggedInUserFollowing(
-  loggedInUserDocId, // currently logged in user document id (karl's profile)
-  profileId, // the user that karl requests to follow
+  loggedInUserDocId, // currently logged in user document id
+  profileId, // the user that requests to follow
   isFollowingProfile // true/false (am i currently following this person?)
 ) {
   return firebase
