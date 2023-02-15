@@ -67,6 +67,6 @@ export default function Comments({
 Comments.propTypes = {
   docId: PropTypes.string.isRequired,
   comments: PropTypes.array.isRequired,
-  posted: PropTypes.number.isRequired,
+  posted: PropTypes.any,
   commentInput: PropTypes.object.isRequired,
 };

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 // import { getPhotos } from '../services/firebase';
 import { firebase } from "../lib/firebase";
+import { getSuggestedPost } from "../services/firebase";
 
 export default function usePhotos(user) {
   const [photos, setPhotos] = useState(null);
@@ -10,7 +11,6 @@ export default function usePhotos(user) {
   useEffect(() => {
     async function getTimelinePhotos() {
       // example: [2, 1, 5] <- 2 being raphel
-      console.log(user);
       if (user?.following?.length > 0) {
         // const followedUserPhotos = await getPhotos(user.userId, user.following);
         // sử dụng snapshot để update realtime DB liên tục
@@ -28,9 +28,15 @@ export default function usePhotos(user) {
             setPhotos(sortData);
           });
       }
+      else {
+        const data = await getSuggestedPost(user.userId, user.following);
+        const sortData = data.sort((b, a) => a.likes.length - b.likes.length);
+        setPhotos(sortData);
+      }
     }
-
+    if(user){
     getTimelinePhotos();
+    }
   }, [user?.userId, user]);
 
   return { photos };

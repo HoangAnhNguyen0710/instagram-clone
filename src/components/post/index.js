@@ -38,7 +38,7 @@ export default function Post({ content }) {
 
 Post.propTypes = {
   content: PropTypes.shape({
-    username: PropTypes.string.isRequired,
+    username: PropTypes.string,
     imageSrc: PropTypes.string.isRequired,
     caption: PropTypes.string.isRequired,
     docId: PropTypes.string.isRequired,
