@@ -16,11 +16,19 @@ export default function Dashboard({ user: loggedInUser }) {
 
   return (
     <LoggedInUserContext.Provider value={{ user }}>
-      <div className="bg-gray-background">
+      <div className="bg-gray-background flex">
+        <div className='w-1/6'>
         <Header />
-        <div className="grid grid-cols-3 gap-4 justify-between mx-auto max-w-screen-lg px-4 lg:px-0">
+        </div>
+        <div className='w-5/6'>
+        <div className="flex flex-col md:flex-row justify-between mx-auto max-w-screen-lg md:px-2 m-2 lg:p-4">
+          <div className='w-full md:w-1/2 flex justify-end md:p-4 p-2 lg:pl-8'>
           <Timeline />
+          </div>
+          <div className='w-full md:w-1/2 flex justify-start md:p-4 lg:pl-8'>
           <Sidebar />
+          </div>
+        </div>
         </div>
       </div>
     </LoggedInUserContext.Provider>

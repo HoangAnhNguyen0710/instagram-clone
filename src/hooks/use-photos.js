@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { useState, useEffect } from 'react';
-import { getPhotos } from '../services/firebase';
+/* eslint-disable quotes */
+import { useState, useEffect } from "react";
+// import { getPhotos } from '../services/firebase';
+import { firebase } from "../lib/firebase";
 
 export default function usePhotos(user) {
   const [photos, setPhotos] = useState(null);
@@ -10,11 +12,21 @@ export default function usePhotos(user) {
       // example: [2, 1, 5] <- 2 being raphel
       console.log(user);
       if (user?.following?.length > 0) {
-        const followedUserPhotos = await getPhotos(user.userId, user.following);
-        console.log(followedUserPhotos);
-        // re-arrange array to be newest photos first by dateCreated
-        followedUserPhotos.sort((a, b) => b.dateCreated - a.dateCreated);
-        setPhotos(followedUserPhotos);
+        // const followedUserPhotos = await getPhotos(user.userId, user.following);
+        // sử dụng snapshot để update realtime DB liên tục
+        await firebase
+          .firestore()
+          .collection("photos")
+          .where("userId", "in", user.following)
+          .onSnapshot((doc) => {
+            const data = doc.docs.map((photo) => ({
+              ...photo.data(),
+              docId: photo.id,
+            }))
+            // re-arrange array to be newest photos first by dateCreated
+            const sortData = data.sort((a, b) => b.dateCreated - a.dateCreated);
+            setPhotos(sortData);
+          });
       }
     }
 

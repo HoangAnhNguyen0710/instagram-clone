@@ -25,10 +25,14 @@ export default function Profile() {
   }, [username, history]);
 
   return user?.username ? (
-    <div className="bg-gray-background">
-      <Header />
+    <div className="bg-gray-background flex">
+      <div className='w-1/6'>
+        <Header />
+        </div>
+        <div className='w-5/6'>
       <div className="mx-auto max-w-screen-lg">
         <UserProfile user={user} />
+      </div>
       </div>
     </div>
   ) : null;

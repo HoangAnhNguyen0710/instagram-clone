@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { getUserByUserId } from '../../services/firebase';
 
 
-export default function Header({ username, userId }) {
+export default function Header({ userId }) {
   const [user, setUser] = useState([]);
   useEffect(() => {
     async function getUserObjByUserId(userId) {
@@ -23,14 +23,14 @@ export default function Header({ username, userId }) {
   return (
     <div className="flex h-4 p-4 py-8">
       <div className="flex items-center">
-        <Link to={`/p/${username}`} className="flex items-center">
+        <Link to={`/p/${user.username}`} className="flex items-center">
           <img
             className="rounded-full h-8 w-8 flex mr-3"
             src=
             {user.imageSrc !== undefined ? user.imageSrc : "/images/avatars/default.png"}
-            alt={`${username} profile picture`}
+            alt={`${user !== [] && user.username} profile picture`}
           />
-          <p className="font-bold">{username}</p>
+          <p className="font-bold">{user !== [] &&  user.username}</p>
         </Link>
       </div>
     </div>
@@ -38,6 +38,5 @@ export default function Header({ username, userId }) {
 }
 
 Header.propTypes = {
-  username: PropTypes.string.isRequired,
   userId: PropTypes.string
 };

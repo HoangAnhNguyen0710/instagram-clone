@@ -20,14 +20,18 @@ export default function ChatBoxScreen({ user: loggedInUser }) {
 
   return (
     <LoggedInUserContext.Provider value={{ user }}>
-      <div className="bg-gray-background">
+      <div className="bg-gray-background flex">
+      <div className='w-1/6'>
         <Header />
-        <div className="grid grid-cols-1 gap-4 justify-between mx-auto max-w-screen-lg px-4 lg:px-0">
+        </div>
+      <div className='w-5/6'>
+        <div className="grid grid-cols-1 gap-4 justify-between mx-auto max-w-screen-lg px-2 m-2 lg:p-4">
         {user ?  (
             <ChatBox following={user.following} user={user}/>
         ): <div className="w-full flex items-center justify-center"><ColorRing visible={loader}/></div>
         }
         </div>
+      </div>
       </div>
     </LoggedInUserContext.Provider>
   );
