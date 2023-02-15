@@ -38,5 +38,5 @@ export default function ChatBoxScreen({ user: loggedInUser }) {
 }
 
 ChatBoxScreen.propTypes = {
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
 };
