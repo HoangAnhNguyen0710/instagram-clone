@@ -79,7 +79,7 @@ export async function getSuggestedProfiles(userId, following) {
     let randomList = []
     while(randomList.length < 10) {
       let i = Math.floor(Math.random() * 19);
-      if(!randomList.includes(resultList[i]) && !following.includes(resultList[i])) {
+      if(!randomList.includes(resultList[i]) && !following.includes(resultList[i]) && resultList[i]?.userId !== userId) {
         randomList.push(resultList[i]);
       }
     }
@@ -96,6 +96,21 @@ export async function getSuggestedProfiles(userId, following) {
     const UserSuggestList = await getUsersByUserId(sameFollowId);
     return UserSuggestList;
 
+  }
+}
+
+export async function getSuggestedPost(userId, following) {
+  if(following.length === 0) {
+    const result = await firebase.firestore().collection("photos").limit(20).get();
+    const resultList =  result.docs.map((post) => ({ ...post.data(), docId: post.id }));
+    let randomList = []
+    while(randomList.length < 10) {
+      let i = Math.floor(Math.random() * 19);
+      if(!randomList.includes(resultList[i]) && !following.includes(resultList[i])) {
+        randomList.push(resultList[i]);
+      }
+    }
+    return randomList;
   }
 }
 
