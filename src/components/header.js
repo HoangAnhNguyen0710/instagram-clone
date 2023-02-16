@@ -165,7 +165,7 @@ export default function Header() {
             <div>
             <div className="my-2 hover:bg-gray-primary">
             <Button type="button" onClick={(e)=>handleOpenPopper(e)} color="inherit">
-                <MenuIcon fontSize="large" /> <span className="px-2 capitalize">More</span>
+                <MenuIcon fontSize="large" /> <span className="capitalize md:px-2 hidden md:block">More</span>
               </Button>
             </div>
               <Popper open={openPopper} placement="top-start" anchorEl={anchorEl} transition>
