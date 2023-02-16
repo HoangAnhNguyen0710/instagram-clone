@@ -41,7 +41,6 @@ export default function Header({
   const [changeAva, setChangeAva] = useState(null);
   const [popoverAnchorEl, setAnchorEl] = useState(null);
   const [followInfor, setFollowInfor] = useState(null);
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -204,7 +203,7 @@ export default function Header({
           <p className="text-2xl mr-4">{profileUsername}</p>
           {activeBtnFollow && (
             <button
-              className="bg-blue-medium font-bold text-sm rounded text-white w-20 h-8"
+              className="bg-blue-medium font-bold text-sm rounded text-white w-20 h-8 hover:bg-gray-base"
               type="button"
               onClick={handleToggleFollow}
               onKeyDown={(event) => {
