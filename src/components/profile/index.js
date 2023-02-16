@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable react/self-closing-comp */
 import { useReducer, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Header from './header';
@@ -28,6 +29,7 @@ export default function Profile({ user }) {
 
   return (
     <>
+    <div className='pt-12'></div>
       <Header
         userInfor = {user}
         photosCount={photosCollection ? photosCollection.length : 0}
